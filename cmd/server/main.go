@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/yourusername/jprq-clone/internal/server"
-	"github.com/yourusername/jprq-clone/internal/shared"
+	"github.com/Coding-for-Machine/cfm/internal/server"
+	"github.com/Coding-for-Machine/cfm/internal/shared"
 )
 
 func main() {

@@ -10,10 +10,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/Coding-for-Machine/cfm/internal/shared"
+	"github.com/Coding-for-Machine/cfm/pkg/protocol"
 	"github.com/gorilla/websocket"
-	"github.com/yourusername/jprq-clone/internal/shared"
-	"github.com/yourusername/jprq-clone/pkg/protocol"
-	"github.com/yourusername/jprq-clone/pkg/websocket"
 )
 
 type HTTPTunnelClient struct {

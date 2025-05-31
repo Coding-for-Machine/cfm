@@ -19,12 +19,7 @@ const (
 	maxMessageSize = 1024 * 1024 // 1MB
 )
 
-var upgrader = websocket.FastHTTPUpgrader{
-	CheckOrigin: func(ctx *fasthttp.RequestCtx) bool {
-		return true
-	},
-}
-
+// Connection WebSocket ulanish uchun abstraksiya
 type Connection struct {
 	conn        *websocket.Conn
 	send        chan []byte
@@ -35,6 +30,12 @@ type Connection struct {
 	isConnected bool
 	onMessage   func(protocol.Message)
 	onClose     func()
+}
+
+var upgrader = websocket.FastHTTPUpgrader{
+	CheckOrigin: func(ctx *fasthttp.RequestCtx) bool {
+		return true
+	},
 }
 
 func NewConnection(ctx *fasthttp.RequestCtx) (*Connection, error) {
