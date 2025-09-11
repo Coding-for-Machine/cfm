@@ -1,6 +1,6 @@
 # 🌐 CFM
 
-CFM — bu [cofm](https://github.com/...) loyihasidan ilhomlangan, lekin **Go fasthttp** kutubxonasi asosida yozilgan tezkor va yengil HTTP tunneling xizmati.  
+CFM — bu [cofm](https://github.com/...) loyihasidan ilhomlangan, lekin **Go net/http** kutubxonasi asosida yozilgan tezkor va yengil HTTP tunneling xizmati.  
 U orqali sen localhost’da ishlayotgan ilovangni tashqi tarmoqdan ham xavfsiz va tezkor tarzda ishlatishing mumkin.
 
 ---

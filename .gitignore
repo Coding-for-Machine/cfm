@@ -1,0 +1,31 @@
+# Binaries for programs and plugins
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+*_test
+
+# Output of 'go build'
+*.exe
+*.o
+
+# IDE-specific files
+.idea/
+.vscode/
+
+# Dependency directories (for older Go versions or specific setups)
+vendor/
+
+# Go module cache
+# This is usually located outside the project, but can be configured
+# to be within the project. If so, ignore it.
+.modcache/
+
+# Log files
+*.log
+
+# Temporary files
+*~
+*.tmp
