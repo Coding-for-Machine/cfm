@@ -4,6 +4,7 @@ package server
 import (
 	"io"
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/Coding-for-Machine/cfm/internal/tunnel"
@@ -153,7 +154,7 @@ func (tm *TunnelManager) HandleAPITunnels(w http.ResponseWriter, r *http.Request
 		w.Write([]byte(`"id":"` + tunnel.ID + `",`))
 		w.Write([]byte(`"subdomain":"` + tunnel.Subdomain + `",`))
 		w.Write([]byte(`"public_url":"` + tunnel.PublicURL + `",`))
-		w.Write([]byte(`"local_port":` + string(rune(tunnel.LocalPort)) + `,`))
+		w.Write([]byte(`"local_port":` + strconv.Itoa(tunnel.LocalPort) + `,`))
 		w.Write([]byte(`"connected_at":"` + tunnel.ConnectedAt.Format(time.RFC3339) + `"`))
 		w.Write([]byte(`}`))
 	}

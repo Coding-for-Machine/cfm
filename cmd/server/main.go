@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/Coding-for-Machine/cfm/internal/server"
+
 	"github.com/gorilla/mux"
 	"github.com/sirupsen/logrus"
 )
@@ -80,8 +81,7 @@ func main() {
 }
 
 func serveDashboard(w http.ResponseWriter, r *http.Request) {
-	html := `
-<!DOCTYPE html>
+	html := `<!DOCTYPE html>
 <html>
 <head>
     <title>JPRQ Clone - Dashboard</title>
@@ -198,38 +198,66 @@ func serveDashboard(w http.ResponseWriter, r *http.Request) {
     </div>
 
     <script>
-        let startTime = Date.now();
-        
+        const startTime = Date.now();
+
         function updateUptime() {
-            const uptime = Math.floor((Date.now() - startTime) / 1000 / 60);
-            document.getElementById('server-uptime').textContent = uptime + 'm';
+            const minutes = Math.floor((Date.now() - startTime) / 1000 / 60);
+            document.getElementById('server-uptime').textContent = minutes + 'm';
         }
 
         async function loadTunnels() {
             try {
                 const response = await fetch('/api/tunnels');
-                const tunnels = await response.json();
-                
+                const data = await response.json();
+
+                // Support multiple response shapes
+                let tunnels = [];
+                if (Array.isArray(data)) {
+                    tunnels = data;
+                } else if (data && Array.isArray(data.tunnels)) {
+                    tunnels = data.tunnels;
+                } else if (data && Array.isArray(data.items)) {
+                    tunnels = data.items;
+                } else {
+                    // fallback: if it's an object with numeric keys
+                    tunnels = [];
+                }
+
                 const container = document.getElementById('tunnels-list');
-                document.getElementById('total-tunnels').textContent = tunnels.length;
-                
-                if (tunnels.length === 0) {
+                document.getElementById('total-tunnels').textContent = tunnels.length || 0;
+
+                if (!tunnels || tunnels.length === 0) {
                     container.innerHTML = '<div class="empty">No active tunnels</div>';
                     return;
                 }
-                
-                
+
+                container.innerHTML = tunnels.map(function(tunnel) {
+                    const publicUrl = tunnel.public_url || tunnel.publicUrl || tunnel.url || '#';
+                    const localPort = tunnel.local_port || tunnel.localPort || '-';
+                    const subdomain = tunnel.subdomain || (publicUrl.split ? publicUrl.split('.')[0] : '-');
+                    const connectedAt = tunnel.connected_at || tunnel.connectedAt || null;
+                    const timeText = connectedAt ? new Date(connectedAt).toLocaleString() : '-';
+
+                    return '<div class="tunnel-item">' +
+                        '<div>' +
+                            '<a href="' + publicUrl + '" target="_blank" class="tunnel-url">' + publicUrl + '</a>' +
+                            '<br><small>→ localhost:' + localPort + '</small>' +
+                        '</div>' +
+                        '<div>' + subdomain + '</div>' +
+                        '<div><span class="status-online">Online</span></div>' +
+                        '<div>' + timeText + '</div>' +
+                    '</div>';
+                }).join('');
             } catch (error) {
                 console.error('Failed to load tunnels:', error);
-                document.getElementById('tunnels-list').innerHTML = 
-                    '<div class="empty">Failed to load tunnels</div>';
+                document.getElementById('tunnels-list').innerHTML = '<div class="empty">Failed to load tunnels</div>';
             }
         }
-        
+
         // Auto refresh
         setInterval(loadTunnels, 5000);
         setInterval(updateUptime, 1000);
-        
+
         // Initial load
         loadTunnels();
         updateUptime();
